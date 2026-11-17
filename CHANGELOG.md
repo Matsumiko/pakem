@@ -1,5 +1,8 @@
 ## 1.2.1 — 2026-11-17
 
+### Added
+- `npx pakem` installer (npm package `pakem`): copies the skill into `~/.claude/skills/pakem` (or `--project` for `./.claude/skills/pakem`, or `--dir` for another skills folder), then delegates any other argument to the bundled Python CLI (`npx pakem init --type app`). The package ships `SKILL.md`, scripts, schemas, references, and assets; it adds no npm dependency to the target project. `npm pack` refuses to build when `package.json` and `scripts/pakem.py` versions differ, and `tests/test_docs.py` guards the same invariant.
+
 ### Fixed
 - Gate `scope` compared only the working tree (`git diff HEAD`), so an agent that committed its work and then ran `check`/`finish` passed without ever being compared against plan scope. The gate now anchors on the HEAD recorded when the session started (`.pakem/sessions/*.json` → `git.head`) and diffs that commit against the working tree in one pass: commits made during the session, uncommitted edits, and untracked files all count. Without an active session it falls back to `git diff HEAD`, so CI on a clean checkout still needs an explicit base to mean anything.
 - `reconcile`/`impact --base REF` used `REF...HEAD`, which lists commits only and hides everything uncommitted. It now runs `git diff REF` (working tree against REF) and adds untracked files, so the manual report and gate `scope` agree.
@@ -20,7 +23,7 @@
 - `tests/test_docs.py` keeps the README pair honest: identical fenced blocks (a CLI change must land in both), links both ways, and a `SKILL.md` description that stays under the 57-character index budget with the trigger word intact.
 
 ### Validation
-- 222 tests, all passing in one uninterrupted run with `requirements-dev.txt` installed in a clean venv (jsonschema 4.26, referencing, cryptography). Without optional dependencies the two URN-resolution tests skip instead of erroring.
+- 223 tests, all passing in one uninterrupted run with `requirements-dev.txt` installed in a clean venv (jsonschema 4.26, referencing, cryptography). Without optional dependencies the two URN-resolution tests skip instead of erroring.
 - Four new regression tests in `tests/test_release_120.py`: committed out-of-scope code fails the gate, committed in-scope code passes, a deleted out-of-scope file is counted, and an untracked new file fails the gate. Before the fix, the committed case printed `[PASS] scope: tidak ada perubahan tertunda` and the deletion was absent from `changed_files`.
 - Two legacy-document tests in `tests/test_pakem.py`: a pre-1.2.1 `BUG-HISTORY.md` with `## Entri` still receives a new entry on top without the stale empty marker, and a legacy `DECISIONS.md` placeholder is replaced by the ADR index entry.
 

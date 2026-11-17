@@ -7,6 +7,7 @@ index truncates before the trigger word.
 """
 from __future__ import annotations
 
+import json
 import re
 import unittest
 from pathlib import Path
@@ -77,6 +78,17 @@ class SkillIndex(unittest.TestCase):
         # Skill indexes truncate around 57 characters; the trigger word must stay visible.
         self.assertLessEqual(len(description), 57, description)
 
+
+class NpmPackage(unittest.TestCase):
+    def test_package_version_matches_cli(self):
+        pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        cli = (ROOT / "scripts" / "pakem.py").read_text(encoding="utf-8")
+        version = re.search(r'(?m)^VERSION = "([^"]+)"$', cli).group(1)
+        self.assertEqual(pkg["version"], version, "package.json and scripts/pakem.py versions differ")
+        self.assertEqual(pkg["bin"], {"pakem": "npm/bin/pakem.js"})
+        self.assertTrue((ROOT / "npm" / "bin" / "pakem.js").is_file())
+        for entry in ("SKILL.md", "scripts/", "assets/", "references/"):
+            self.assertIn(entry, pkg["files"])
 
 if __name__ == "__main__":
     unittest.main()

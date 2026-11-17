@@ -1,0 +1,57 @@
+{
+  "name": "pakem",
+  "version": "1.2.1",
+  "description": "Agent work discipline with verifiable finish gates: sessions, plans, specs, and gates that can fail.",
+  "bin": {
+    "pakem": "npm/bin/pakem.js"
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "README-ID.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "assets/",
+    "scripts/",
+    "references/",
+    "adapters/",
+    "protocol/",
+    "intelligence/",
+    "runtime/",
+    "policy/",
+    "coordination/",
+    "identity/",
+    "storage/",
+    "conformance/",
+    "evals/",
+    "npm/"
+  ],
+  "scripts": {
+    "prepack": "node npm/check-version.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "agent",
+    "coding-agent",
+    "skill",
+    "claude",
+    "codex",
+    "cursor",
+    "workflow",
+    "verification"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matsumiko/pakem.git"
+  },
+  "homepage": "https://github.com/Matsumiko/pakem",
+  "bugs": {
+    "url": "https://github.com/Matsumiko/pakem/issues"
+  }
+}
