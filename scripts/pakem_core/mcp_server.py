@@ -16,7 +16,7 @@ from typing import Any
 
 MCP_VERSION = "2026-07-28"
 SERVER_NAME = "pakem"
-SERVER_VERSION = "1.2.1"
+SERVER_VERSION = "1.3.0"
 META_VERSION = "io.modelcontextprotocol/protocolVersion"
 META_CLIENT_CAPS = "io.modelcontextprotocol/clientCapabilities"
 META_CLIENT_INFO = "io.modelcontextprotocol/clientInfo"

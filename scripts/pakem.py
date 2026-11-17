@@ -21,7 +21,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
-VERSION = "1.2.1"
+VERSION = "1.3.0"
 PROTOCOL_VERSION = "1.0"
 PROTOCOL_EVENTS = {
     "session.started", "session.abandoned", "session.step_recorded",

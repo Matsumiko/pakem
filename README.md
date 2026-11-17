@@ -84,10 +84,11 @@ Pakem makes agent work **consistent** 🌙, **resumable** 🔁, and **provably f
 
 This folder is a skill. Put it in as `pakem/` inside your agent's skills folder (e.g. `.claude/skills/pakem/` or `~/.claude/skills/pakem/`). For other agents, just run the CLI directly.
 
-With Node 18+, the npm package installs the skill for you (Pakem itself still runs on Python 3.10+):
+With Node 18+, the npm package installs the skill for you (Pakem itself still runs on Python 3.10+). In a terminal it opens a picker; flags keep it non-interactive:
 
 ```bash
-npx pakem-cli                          # ~/.claude/skills/pakem
+npx pakem-cli                          # interactive picker
+npx pakem-cli install --yes            # non-interactive, global default
 npx pakem-cli install --project        # ./.claude/skills/pakem
 npx pakem-cli install --dir ~/.agents/skills/pakem
 ```

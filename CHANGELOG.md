@@ -1,3 +1,12 @@
+## 1.3.0 — 2026-11-17
+
+### Added
+- Interactive `npx pakem-cli` installer: in a terminal it asks where the skill should live (Claude Code global, agents/skills.sh global, current project, or a custom path), confirms replacement, and reports the installed Python version. Without a TTY, or with `--yes`/`--dir`/`--project`, it keeps the non-interactive path so agents and CI can call it safely.
+- The npm package declares `@clack/prompts` as its only runtime dependency, used by the installer. The Python CLI/Core remains standard-library only.
+
+### Changed
+- Version 1.3.0 across the CLI, `SKILL.md`, MCP `serverInfo`, and the npm package.
+
 ## 1.2.1 — 2026-11-17
 
 ### Added

@@ -4,7 +4,7 @@ description: "Pakem: agent work discipline with finish gates."
 license: MIT
 compatibility: Python 3.10+; Linux/macOS tested, Windows best-effort
 metadata:
-  version: "1.2.1"
+  version: "1.3.0"
 ---
 
 # Pakem

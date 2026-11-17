@@ -84,10 +84,11 @@ Pakem bikin kerja agent **konsisten** 🌙, **bisa dilanjut** 🔁, dan **bisa d
 
 Folder ini adalah sebuah skill. Taruh sebagai `pakem/` di folder skill agent kamu (mis. `.claude/skills/pakem/` atau `~/.claude/skills/pakem/`). Untuk agent lain, cukup jalankan CLI-nya langsung.
 
-Dengan Node 18+, paket npm memasang skill-nya untuk kamu (Pakem sendiri tetap butuh Python 3.10+):
+Dengan Node 18+, paket npm memasang skill-nya untuk kamu (Pakem sendiri tetap butuh Python 3.10+). Di terminal ia membuka picker; flag membuatnya non-interaktif:
 
 ```bash
-npx pakem-cli                          # ~/.claude/skills/pakem
+npx pakem-cli                          # interactive picker
+npx pakem-cli install --yes            # non-interactive, global default
 npx pakem-cli install --project        # ./.claude/skills/pakem
 npx pakem-cli install --dir ~/.agents/skills/pakem
 ```
