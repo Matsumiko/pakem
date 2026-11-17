@@ -87,12 +87,12 @@ This folder is a skill. Put it in as `pakem/` inside your agent's skills folder 
 With Node 18+, the npm package installs the skill for you (Pakem itself still runs on Python 3.10+):
 
 ```bash
-npx pakem                          # ~/.claude/skills/pakem
-npx pakem install --project        # ./.claude/skills/pakem
-npx pakem install --dir ~/.agents/skills/pakem
+npx pakem-cli                          # ~/.claude/skills/pakem
+npx pakem-cli install --project        # ./.claude/skills/pakem
+npx pakem-cli install --dir ~/.agents/skills/pakem
 ```
 
-The package only copies the skill; it adds no npm dependency to your project. Any other argument is delegated to the bundled Python CLI (`npx pakem init --type app`).
+The package only copies the skill; it adds no npm dependency to your project. Any other argument is delegated to the bundled Python CLI (`npx pakem-cli init --type app`).
 
 Requires **Python 3.10+**. The base CLI/Core uses only the standard library. Ed25519 identity operations are optional and require `python -m pip install cryptography`.
 

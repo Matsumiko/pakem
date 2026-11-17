@@ -1,7 +1,7 @@
 ## 1.2.1 — 2026-11-17
 
 ### Added
-- `npx pakem` installer (npm package `pakem`): copies the skill into `~/.claude/skills/pakem` (or `--project` for `./.claude/skills/pakem`, or `--dir` for another skills folder), then delegates any other argument to the bundled Python CLI (`npx pakem init --type app`). The package ships `SKILL.md`, scripts, schemas, references, and assets; it adds no npm dependency to the target project. `npm pack` refuses to build when `package.json` and `scripts/pakem.py` versions differ, and `tests/test_docs.py` guards the same invariant.
+- `npx pakem-cli` installer (npm package `pakem-cli`): copies the skill into `~/.claude/skills/pakem` (or `--project` for `./.claude/skills/pakem`, or `--dir` for another skills folder), then delegates any other argument to the bundled Python CLI (`npx pakem-cli init --type app`). The package ships `SKILL.md`, scripts, schemas, references, and assets; it adds no npm dependency to the target project. `npm pack` refuses to build when `package.json` and `scripts/pakem.py` versions differ, and `tests/test_docs.py` guards the same invariant.
 
 ### Fixed
 - Gate `scope` compared only the working tree (`git diff HEAD`), so an agent that committed its work and then ran `check`/`finish` passed without ever being compared against plan scope. The gate now anchors on the HEAD recorded when the session started (`.pakem/sessions/*.json` → `git.head`) and diffs that commit against the working tree in one pass: commits made during the session, uncommitted edits, and untracked files all count. Without an active session it falls back to `git diff HEAD`, so CI on a clean checkout still needs an explicit base to mean anything.

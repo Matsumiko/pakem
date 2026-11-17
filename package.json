@@ -1,5 +1,5 @@
 {
-  "name": "pakem",
+  "name": "pakem-cli",
   "version": "1.2.1",
   "description": "Agent work discipline with verifiable finish gates: sessions, plans, specs, and gates that can fail.",
   "bin": {

@@ -87,12 +87,12 @@ Folder ini adalah sebuah skill. Taruh sebagai `pakem/` di folder skill agent kam
 Dengan Node 18+, paket npm memasang skill-nya untuk kamu (Pakem sendiri tetap butuh Python 3.10+):
 
 ```bash
-npx pakem                          # ~/.claude/skills/pakem
-npx pakem install --project        # ./.claude/skills/pakem
-npx pakem install --dir ~/.agents/skills/pakem
+npx pakem-cli                          # ~/.claude/skills/pakem
+npx pakem-cli install --project        # ./.claude/skills/pakem
+npx pakem-cli install --dir ~/.agents/skills/pakem
 ```
 
-Paket ini hanya menyalin skill; tidak menambah dependency npm ke proyekmu. Argumen lain diteruskan ke CLI Python bawaan paket (`npx pakem init --type app`).
+Paket ini hanya menyalin skill; tidak menambah dependency npm ke proyekmu. Argumen lain diteruskan ke CLI Python bawaan paket (`npx pakem-cli init --type app`).
 
 Butuh **Python 3.10+**. CLI/Core dasar hanya memakai standard library. Operasi identitas Ed25519 opsional dan memerlukan `python -m pip install cryptography`.
 
