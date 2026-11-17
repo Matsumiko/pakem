@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:protocol:v1:session",
+  "title": "Pakem Session v1",
+  "description": "Portable baseline for a Pakem session. Additional properties are allowed for forward-compatible extensions.",
+  "type": "object",
+  "required": [
+    "id",
+    "goal",
+    "status",
+    "startedAt",
+    "steps"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "finished",
+        "abandoned"
+      ]
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "nextStep": {
+      "type": "string"
+    },
+    "steps": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:runtime:v1:hook-payload",
+  "title": "Pakem Lifecycle Hook Payload v1",
+  "type": "object",
+  "properties": {
+    "category": {"enum": ["read", "write", "command", "destructive", "deploy", "security", "policy_change", "gate_change"]},
+    "risk": {"enum": ["low", "medium", "high", "critical"]},
+    "target": {"type": "string", "maxLength": 240}
+  },
+  "additionalProperties": true
+}

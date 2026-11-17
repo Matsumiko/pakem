@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:coordination:v1:event",
+  "title": "Pakem Coordination Event (Pakem Protocol v1.0 envelope)",
+  "type": "object",
+  "required": ["protocol", "protocol_version", "event_id", "event", "occurred_at", "session_id", "actor", "payload"],
+  "properties": {
+    "protocol": {"const": "pakem"},
+    "protocol_version": {"const": "1.0"},
+    "event_id": {"type": "string", "minLength": 1},
+    "event": {"enum": ["team.agent.registered", "team.task.created", "team.task.assigned", "team.task.claimed", "team.task.heartbeat", "team.task.released", "team.task.handed_off", "team.task.submitted", "team.task.reviewed", "team.task.blocked", "team.task.unblocked"]},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "session_id": {"type": ["string", "null"]},
+    "actor": {
+      "type": "object",
+      "required": ["type", "name"],
+      "properties": {
+        "type": {"enum": ["agent", "user", "system"]},
+        "name": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": false
+}

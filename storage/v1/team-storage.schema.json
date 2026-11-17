@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:storage:v1:team-storage",
+  "title": "Pakem Team Storage Configuration v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "backend",
+    "backupFilesRetained"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "backend": {
+      "const": "sqlite"
+    },
+    "migratedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "backupFilesRetained": {
+      "const": true
+    }
+  },
+  "additionalProperties": false
+}

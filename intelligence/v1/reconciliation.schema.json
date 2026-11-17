@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:intelligence:v1:reconciliation",
+  "title": "Pakem Artifact Reconciliation v1",
+  "description": "Output of `pakem reconcile --json`: comparison between the actual changes in the repo, the file scope declared by the plan, and the spec acceptance criteria. Advisory only; the gate still decides.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "changed_files",
+    "declared_scope",
+    "in_scope",
+    "out_of_scope",
+    "code_out_of_scope",
+    "tasks",
+    "acceptance",
+    "summary",
+    "ok"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "pakem.reconciliation/v1"
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "declared_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "in_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "out_of_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "code_out_of_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "taskId",
+          "done",
+          "declared",
+          "changed",
+          "untouched"
+        ],
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean"
+          },
+          "declared": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "changed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "untouched": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "required": [
+        "total",
+        "checked",
+        "unchecked"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unchecked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "changed",
+        "in_scope",
+        "out_of_scope",
+        "code_out_of_scope",
+        "acceptance_unchecked"
+      ],
+      "properties": {
+        "changed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "in_scope": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "out_of_scope": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "code_out_of_scope": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "acceptance_unchecked": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ok": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

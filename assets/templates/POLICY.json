@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "autonomy": "assisted",
+  "maxAutonomousRisk": "medium",
+  "approvalRequiredFor": [
+    "destructive",
+    "deploy",
+    "security",
+    "policy_change",
+    "gate_change"
+  ],
+  "deniedCategories": [],
+  "approvalTtlSeconds": 900,
+  "description": "Normal project edits may proceed; sensitive or high-risk actions require host-mediated approval."
+}

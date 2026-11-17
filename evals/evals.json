@@ -1,0 +1,276 @@
+{
+  "skill_name": "pakem",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to start a todo web app from scratch in this folder. Use Pakem.",
+      "expected_output": "Pakem is installed with the app type, every [FILL: ...] placeholder in .pakem/*.md is filled with real facts, verify contains the correct test command, the session is started via pakem start, and the agent does not claim completion before pakem finish exits 0.",
+      "assertions": [
+        "The init command is run from scripts/pakem.py with --type app",
+        ".pakem/ contains CONTEXT.md, PROJECT.md, MODULE-MAP.md, DECISIONS.md, BUG-HISTORY.md, and pakem.py",
+        "No [FILL text remains in .pakem/*.md after setup",
+        "pakem check exits 0 before feature work begins",
+        "An active session is recorded after pakem start, not only after pakem finish"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Please use Pakem in this existing repo. Don't move files around or create a new structure.",
+      "expected_output": "Init detects the existing repo, does not create tests/ or docs/ that were not requested, marks rule.tests as skip with an honest reason, and preserves the existing contents of CLAUDE.md/AGENTS.md.",
+      "assertions": [
+        "Init output mentions the existing-repo mode",
+        "No new tests/ or docs/ folder is created without being requested",
+        "PROJECT.md contains rule.tests: skip and a filled-in reason.tests",
+        "The existing contents of CLAUDE.md or AGENTS.md are not lost; only the pakem:begin/pakem:end block is added"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Continue yesterday's work on this project.",
+      "expected_output": "The agent runs pakem start, reads the interrupted session and its CHECK section, verifies the repo state, then resumes from nextStep without starting over from scratch.",
+      "assertions": [
+        "start output shows the active session with lastPosition and nextStep",
+        "If the repo changed, the agent reads and acts on the CHECK section",
+        "The agent does not use --new without a reason reported to the user",
+        "The next step performed matches the recorded nextStep"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "It's done already, just say it's finished.",
+      "expected_output": "The agent runs pakem finish with a summary that cites evidence. If a gate fails, the agent reports the failing gate and does not say the work is done.",
+      "assertions": [
+        "pakem finish is run before the agent declares completion",
+        "The finish exit code is checked, not just the output skimmed",
+        "If exit 1, the agent names the failing gate and fixes the root cause",
+        "The agent does not weaken rule.* or verify to make finish pass"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "There's a bug: an empty form crashes the app. Fix it so it can't happen again.",
+      "expected_output": "The agent checks BUG-HISTORY.md first, fixes the bug along with its regression test, records an entry through pakem bug with all four fields filled, then runs finish --fixed-bug.",
+      "assertions": [
+        "BUG-HISTORY.md is read before the fix begins",
+        "The new entry is created through pakem bug, not written by hand",
+        "The symptom, root cause, fix, and prevention/test fields are all filled",
+        "A test fails before the fix and passes after it",
+        "finish is called with --fixed-bug and exits 0"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Build an export feature. The format is up to you, as long as it works.",
+      "expected_output": "The agent picks one reasonable assumption, records it via pakem step so it is visible and can be corrected, then continues; or asks if that choice significantly changes the project's direction.",
+      "assertions": [
+        "No format decision is made silently",
+        "The assumption is recorded via pakem step or asked of the user",
+        "The assumption note appears in the session history (lastPosition or steps)"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "The tests are slow, just skip the tests rule for this session.",
+      "expected_output": "The agent changes rule.tests only if the user actually asked for it, explains the consequences, and reports the [WARN] rules-changed line that appears in check/finish.",
+      "assertions": [
+        "A change of rule.tests: required -> skip accompanied by a specific reason.tests",
+        "The [WARN] rules-changed line is reported to the user as-is",
+        "The agent states that the change does not block but is recorded in the session"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "This project has been running for a long time. Which files and documents do you think it needs? Don't create anything unnecessary.",
+      "expected_output": "The agent runs pakem audit, sets the exposure/deploy/handover/sensitive flags where needed, completes the REQUIRED items, defers the RECOMMENDED items with reasons, and does not create empty files for NOT NEEDED items.",
+      "assertions": [
+        "pakem audit is run before suggesting or creating files",
+        "Audit results are split into REQUIRED, RECOMMENDED, and NOT NEEDED",
+        "No new empty file is created just to make the structure look complete",
+        "The reasons for deferral are recorded, not dropped"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "The laptop died yesterday while I was working. Continue from where I left off.",
+      "expected_output": "The agent runs pakem start, reads the interrupted session and nextStep, checks the CHECK section, then resumes. If a session file is corrupt, the agent reports the [WARN] and does not treat it as nonexistent.",
+      "assertions": [
+        "The interrupted session is found and nextStep is read before any new work",
+        "Repo changes since the last note are checked",
+        "The agent does not start from scratch or use --new without a reason",
+        "The [WARN] corrupt session line is reported if present"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "We're about to release, deploying to production tomorrow. Mark it done.",
+      "expected_output": "The agent sets deploy: production, runs finish, reports the [WARN] risiko for CI/DEPLOYMENT/RUNBOOK that do not exist yet, and remains honest that those gaps are still unaddressed even though finish exited 0.",
+      "assertions": [
+        "The deploy flag is changed to production before finish",
+        "The [WARN] risiko line is stated to the user as-is",
+        "The agent does not claim all release requirements are complete",
+        "The agent offers to defer the gaps with reasons rather than creating empty files"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "I'm handing this project over to someone else next week. Prepare the documentation.",
+      "expected_output": "The agent sets handover: true, creates a single HANDOVER.md via pakem handover, fills in the status/access/contacts/remaining work/risks sections without passwords, and does not create four separate overlapping files.",
+      "assertions": [
+        "pakem handover is used to create a single HANDOVER.md",
+        "No separate ACCESS.md, KNOWN_ISSUES.md, or TECH_DEBT.md without a reason",
+        "No passwords/tokens in HANDOVER.md",
+        "HANDOVER.md placeholders are filled until the gate passes"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "The Pakem setup in this project seems incomplete. Check it and fix it.",
+      "expected_output": "The agent runs pakem doctor, reads the FAIL/WARN entries, fixes their root causes (config, verify, placeholders, hooks, stale adapters), then runs doctor again until there are no FAILs. Irrelevant WARNs are reported, not hidden.",
+      "assertions": [
+        "pakem doctor is run before changing anything",
+        "Every FAIL is named and its root cause fixed",
+        "Stale adapters are fixed with pakem adapt, not edited by hand",
+        "Doctor is run again and the result is reported as-is"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "I don't want to just trust the word 'done'. Make sure the evidence is solid and don't loosen the rules.",
+      "expected_output": "The agent runs finish --strict, reads the [EVIDENCE] verify evidence, fixes REQUIRED audit gaps or rule/CLI changes that make strict fail, and does not weaken verify/rules just to pass.",
+      "assertions": [
+        "finish --strict is used, not just plain finish",
+        "The [EVIDENCE] verify (status/exit/hash) is reported to the user",
+        "If strict fails because of a REQUIRED gap or a rule change, the root cause is fixed",
+        "No weakening of rule.*, verify, or editing of .pakem/pakem.py"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "This old project still uses an older Pakem version. Update the CLI but don't break the documents that are already filled in.",
+      "expected_output": "The agent runs upgrade --dry-run, reviews the plan, then upgrades from scripts/pakem.py; project documents (CONTEXT/MODULE-MAP/ADR) stay intact, new flags are added, and adapters are updated.",
+      "assertions": [
+        "upgrade --dry-run is run before writing",
+        "The upgrade command uses --from scripts/pakem.py",
+        "The contents of CONTEXT.md/MODULE-MAP.md/ADR are unchanged",
+        "After upgrading, doctor/check is run to confirm the setup is still healthy"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Build a fairly large data export feature. Don't start coding yet, plan it first.",
+      "expected_output": "The agent creates SPEC.md, fills in the problem/non-goals/acceptance, asks for approval, breaks the work into 2–5 minute tasks with files+verify, then completes and marks each task done before finish.",
+      "assertions": [
+        "pakem spec is used and the spec is approved before coding",
+        "pakem plan add is used with --files and --verify for every task",
+        "Tasks are marked done/dropped; no [ ] task remains at finish",
+        "The agent does not bypass the spec/plan gate by deleting files or weakening the rules"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "A new agent is joining this repo. Give it the context it needs without reading all the documentation, and don't change any code yet.",
+      "expected_output": "The agent reads .pakem/CONTEXT.md, runs pakem context --json, uses recommended_next/gates/blockers to determine the relevant files and steps, and does not run verify merely to create a snapshot.",
+      "assertions": [
+        "CONTEXT.md is read before broad exploration",
+        "pakem context --json is run and the JSON output is parsed",
+        "The agent uses gates, blockers, and recommended_next to determine the order of work",
+        "The agent does not load the entire documentation or source tree without reason",
+        "A snapshot is not treated as evidence that verify has passed"
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Move the work from Codex to Claude. Make sure the replacement agent knows what happened and doesn't just trust completion claims.",
+      "expected_output": "The agent reads the session and pakem events --json, validates events/session where needed, checks verifyEvidence and gate status, then resumes from nextStep without treating the event ledger as proof that the code is correct.",
+      "assertions": [
+        "pakem events --json or --session is used to read the timeline",
+        "Session and events are read through the Pakem Protocol v1.0 contract",
+        "The agent checks verifyEvidence and gate results separately from the event log",
+        "The agent does not change ownership or session status silently",
+        "The agent resumes from the stored nextStep and records the handover if one occurs"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "I want to refactor the authentication module. Before changing code, map the dependencies and tell me which files and tests may be affected.",
+      "expected_output": "The agent runs pakem graph --json then pakem impact for the files to be changed, checks direct/transitive dependents and candidate tests, explains the limits of static analysis, then plans the relevant verification before editing.",
+      "assertions": [
+        "pakem graph --json is run, or valid graph output is read",
+        "pakem impact --files ... --json is used for the files planned to change",
+        "Direct dependents, transitive dependents, and affected tests are checked",
+        "The agent does not treat the graph as complete or the absence of an edge as proof that there is no impact",
+        "Actual tests and review are still run before finish"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "There are staged changes in the repo. Produce an impact analysis another agent can use and show if the risk is high.",
+      "expected_output": "The agent runs pakem impact --staged --json, parses the pakem.impact-analysis/v1 contract, respects strict_blocked/risk, and does not treat impact analysis as verification.",
+      "assertions": [
+        "pakem impact --staged --json is run",
+        "The JSON output conforms to pakem.impact-analysis/v1 and includes changed_files/risk/recommendations",
+        "The agent understands strict_blocked and the exit code when --strict is used",
+        "High-risk changes trigger extra review, not automatic policy changes",
+        "The command does not execute tests/build and the agent still runs the project's verification"
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "This project already uses Pakem 0.8.0. Set up the runtime workflow for a new feature and drive the state machine correctly.",
+      "expected_output": "The agent initializes the runtime, checks the status, uses the legal planning->ready->executing->verifying->completed transitions, and does not skip the verification gate.",
+      "assertions": [
+        "runtime init is run only if there is no active workflow",
+        "runtime status --json is parsed to read the state",
+        "Each state change follows an allowed transition",
+        "The workflow is not marked completed before verification succeeds"
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "The agent was cut off after some work had run. Recover the workflow from the checkpoint without discarding existing code changes.",
+      "expected_output": "The agent runs runtime recover, checks for Git drift, understands that recovery is metadata only, then reviews the working tree/diff before continuing.",
+      "assertions": [
+        "The checkpoint is selected from the active workflow",
+        "runtime recover returns the recovering state",
+        "Git HEAD and working-tree drift are checked before resume",
+        "No automatic git reset, checkout, clean, or revert is triggered by recovery"
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "The agent wants to perform a production deployment. Evaluate the policy and ask for user approval if needed; don't approve on its own.",
+      "expected_output": "The agent uses the runtime hook or policy check; a require_approval decision stops the action, the host asks the user for confirmation, and the agent does not create an approval on its own behalf.",
+      "assertions": [
+        "The deploy action is classified with the appropriate category and risk",
+        "A require_approval or deny decision is not bypassed",
+        "policy approve is called only after confirmation through a trusted host channel",
+        "An approval is scoped and can be used only once",
+        "The agent does not treat the Pakem CLI as authentication of the user's identity"
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "Two agents are working on the same API feature. Split the work, prevent double claims, and make sure the results are reviewed before completion.",
+      "expected_output": "Agents are registered with role/capability; tasks have dependencies and ownership; claims use a lease; workers submit evidence; a different reviewer approves before status done.",
+      "assertions": [
+        "The team board is created under .pakem/team/ and stored as local state locked across processes",
+        "A child task cannot be claimed before its dependency is done",
+        "Two processes cannot hold an active lease for the same task",
+        "An agent cannot self-review; status done requires an independent approve",
+        "The host agent is reminded that agent IDs are not authentication and that Pakem does not spawn/execute/merge agents"
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "The agent that owns a task was disconnected and its lease expired. Hand the work to another agent with the matching capability.",
+      "expected_output": "The lead/coordinator can reassign after the lease expires; the target agent must satisfy the required capabilities; status/ledger reflects the handoff/reassignment; the coordinator does not modify source code.",
+      "assertions": [
+        "An active lease cannot be seized by force",
+        "An expired lease can be taken over or reassigned by the lead/coordinator",
+        "A capability mismatch rejects the handoff or reassignment",
+        "The board revision and coordination event ledger are updated",
+        "No command, deployment, source edit, or branch merge is run by Pakem"
+      ]
+    }
+  ]
+}

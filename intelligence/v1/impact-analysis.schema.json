@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:intelligence:v1:impact-analysis",
+  "title": "Pakem Impact Analysis v1",
+  "type": "object",
+  "required": ["schema_version", "changed_files", "direct_dependents", "transitive_dependents", "affected_tests", "risk", "summary", "recommendations", "analysis_limits", "strict_blocked"],
+  "properties": {
+    "schema_version": {"const": "pakem.impact-analysis/v1"},
+    "changed_files": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "direct_dependents": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "transitive_dependents": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "affected_tests": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "risk": {
+      "type": "object",
+      "required": ["level", "score", "reasons"],
+      "properties": {
+        "level": {"enum": ["low", "medium", "high"]},
+        "score": {"type": "integer", "minimum": 0},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["changed_count", "direct_dependent_count", "transitive_dependent_count", "affected_test_count"],
+      "properties": {
+        "changed_count": {"type": "integer", "minimum": 0},
+        "direct_dependent_count": {"type": "integer", "minimum": 0},
+        "transitive_dependent_count": {"type": "integer", "minimum": 0},
+        "affected_test_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "graph_health": {
+      "description": "Quality of the graph used by this analysis. `complete: false` means some imports are unresolved, so dependents may go undetected.",
+      "type": "object",
+      "required": ["alias_rules", "unresolved_imports", "circular_dependencies", "complete"],
+      "properties": {
+        "alias_rules": {"type": "integer", "minimum": 0},
+        "unresolved_imports": {"type": "integer", "minimum": 0},
+        "circular_dependencies": {"type": "integer", "minimum": 0},
+        "complete": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "recommendations": {"type": "array", "items": {"type": "string"}},
+    "analysis_limits": {"type": "array", "items": {"type": "string"}},
+    "strict_blocked": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:coordination:v1:board",
+  "title": "Pakem Multi-Agent Coordination Board v1",
+  "type": "object",
+  "required": ["schemaVersion", "boardId", "revision", "createdAt", "updatedAt", "agents", "tasks"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "boardId": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"},
+    "agents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["agentId", "displayName", "role", "capabilities", "status", "registeredAt", "lastSeenAt"],
+        "properties": {
+          "agentId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"},
+          "displayName": {"type": "string", "maxLength": 120},
+          "role": {"enum": ["worker", "reviewer", "lead", "coordinator", "observer"]},
+          "capabilities": {"type": "array", "items": {"type": "string", "maxLength": 500}, "uniqueItems": true},
+          "status": {"enum": ["active", "disabled"]},
+          "registeredAt": {"type": "string", "format": "date-time"},
+          "lastSeenAt": {"type": "string", "format": "date-time"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["taskId", "title", "description", "state", "dependsOn", "files", "risk", "requiredCapabilities", "assignedAgent", "ownerAgent", "leaseExpiresAt", "createdAt", "updatedAt", "submission", "lastReview", "lastHandoff", "blockedReason"],
+        "properties": {
+          "taskId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"},
+          "title": {"type": "string", "minLength": 1, "maxLength": 200},
+          "description": {"type": "string", "maxLength": 2000},
+          "state": {"enum": ["open", "claimed", "review", "done", "blocked"]},
+          "dependsOn": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "files": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "risk": {"enum": ["low", "medium", "high", "critical"]},
+          "requiredCapabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "assignedAgent": {"type": ["string", "null"]},
+          "ownerAgent": {"type": ["string", "null"]},
+          "leaseExpiresAt": {"type": ["string", "null"], "format": "date-time"},
+          "createdAt": {"type": "string", "format": "date-time"},
+          "updatedAt": {"type": "string", "format": "date-time"},
+          "submission": {"type": ["object", "null"]},
+          "lastReview": {"type": ["object", "null"]},
+          "lastHandoff": {"type": ["object", "null"]},
+          "blockedReason": {"type": ["string", "null"]}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

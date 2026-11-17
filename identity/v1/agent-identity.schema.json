@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:identity:v1:agent-identity",
+  "title": "Pakem Agent Public Identity v1",
+  "type": "object",
+  "required": [
+    "agentId",
+    "algorithm",
+    "publicKey",
+    "fingerprint",
+    "keyId",
+    "createdAt",
+    "revokedAt",
+    "previousKeys"
+  ],
+  "properties": {
+    "agentId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "algorithm": {
+      "const": "Ed25519"
+    },
+    "publicKey": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 64
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "keyId": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{16}$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rotatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revokedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revocationReason": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "previousKeys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fingerprint",
+          "publicKey",
+          "retiredAt",
+          "reason"
+        ],
+        "properties": {
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "publicKey": {
+            "type": "string",
+            "minLength": 40,
+            "maxLength": 64
+          },
+          "keyId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "retiredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

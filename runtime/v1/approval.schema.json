@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:runtime:v1:approval",
+  "title": "Pakem Policy Approval Store v1",
+  "description": "One-use approval records granted by an operator through a trusted host channel. Hosts must verify scope, expiry, and single use before acting.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "approvals"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "approvals": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": [
+          "approvalId",
+          "category",
+          "risk",
+          "scopeHash",
+          "reason",
+          "grantedAt",
+          "expiresAt",
+          "consumedAt"
+        ],
+        "properties": {
+          "approvalId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "read",
+              "write",
+              "command",
+              "destructive",
+              "deploy",
+              "security",
+              "policy_change",
+              "gate_change"
+            ]
+          },
+          "risk": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "targetHash": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "scopeHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "workflowId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "grantedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "consumedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

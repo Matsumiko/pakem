@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:coordination:v1:status",
+  "title": "Pakem Coordination Status Response v1",
+  "description": "Machine-readable response returned by pakem team status --json.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["initialized", "agents", "tasks", "summary"],
+      "properties": {
+        "initialized": {"const": false},
+        "agents": {"type": "array", "maxItems": 0},
+        "tasks": {"type": "array", "maxItems": 0},
+        "summary": {"$ref": "#/$defs/summary"}
+      },
+      "additionalProperties": true
+    },
+    {
+      "type": "object",
+      "required": ["initialized", "boardId", "revision", "updatedAt", "agents", "tasks", "summary", "note"],
+      "properties": {
+        "initialized": {"const": true},
+        "boardId": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 1},
+        "updatedAt": {"type": "string", "format": "date-time"},
+        "agents": {"type": "array", "items": {"type": "object"}},
+        "tasks": {"type": "array", "items": {"type": "object", "required": ["taskId", "state", "leaseExpired"], "properties": {"taskId": {"type": "string"}, "state": {"enum": ["open", "claimed", "review", "done", "blocked"]}, "leaseExpired": {"type": "boolean"}}, "additionalProperties": true}},
+        "summary": {"$ref": "#/$defs/summary"},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  ],
+  "$defs": {
+    "summary": {
+      "type": "object",
+      "required": ["open", "claimed", "review", "done", "blocked"],
+      "properties": {
+        "open": {"type": "integer", "minimum": 0},
+        "claimed": {"type": "integer", "minimum": 0},
+        "review": {"type": "integer", "minimum": 0},
+        "done": {"type": "integer", "minimum": 0},
+        "blocked": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:policy:v1",
+  "title": "Pakem Policy v1",
+  "type": "object",
+  "required": ["schemaVersion", "autonomy", "maxAutonomousRisk", "approvalRequiredFor", "deniedCategories", "approvalTtlSeconds"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "autonomy": {"enum": ["manual", "assisted", "guarded_autonomous"]},
+    "maxAutonomousRisk": {"enum": ["low", "medium", "high", "critical"]},
+    "approvalRequiredFor": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/category"}},
+    "deniedCategories": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/category"}},
+    "approvalTtlSeconds": {"type": "integer", "minimum": 30, "maximum": 86400},
+    "description": {"type": "string"}
+  },
+  "$defs": {
+    "category": {"enum": ["read", "write", "command", "destructive", "deploy", "security", "policy_change", "gate_change"]}
+  },
+  "additionalProperties": false
+}

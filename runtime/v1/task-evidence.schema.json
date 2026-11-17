@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:runtime:v1:task-evidence",
+  "title": "Pakem Task Evidence v1",
+  "description": "Verify evidence per task plan. One entry per task; `status: waived` means the task was finished without running verify and the reason is recorded.",
+  "type": "object",
+  "required": ["schema_version", "tasks"],
+  "properties": {
+    "schema_version": {"const": "pakem.task-evidence/v1"},
+    "tasks": {
+      "type": "object",
+      "maxProperties": 500,
+      "additionalProperties": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["command", "status", "exit", "at", "files"],
+      "properties": {
+        "command": {"type": "string"},
+        "status": {"enum": ["pass", "fail", "waived"]},
+        "exit": {"type": ["integer", "null"]},
+        "at": {"type": "string"},
+        "reason": {"type": "string"},
+        "durationMs": {"type": "integer", "minimum": 0},
+        "outputHash": {"type": "string"},
+        "files": {
+          "type": "object",
+          "description": "Content fingerprint of scope files at the time verify ran; used to detect stale evidence.",
+          "additionalProperties": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

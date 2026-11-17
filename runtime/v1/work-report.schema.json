@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:runtime:v1:work-report",
+  "title": "Pakem Work Report v1",
+  "description": "Per-project work roll-up: sessions, tasks from PLAN.md, verify evidence per task, and event ledger status. The numbers come from artifacts that can be re-inspected, not from agent narration.",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "scope", "sessions", "tasks", "ledger", "totals"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "pakem.work-report/v1"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "scope": {
+      "type": "object",
+      "required": ["session", "limit"],
+      "additionalProperties": false,
+      "properties": {
+        "session": {"type": ["string", "null"], "description": "Session filter applied; null when all sessions are included"},
+        "limit": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "sessions": {
+      "type": "array",
+      "description": "Newest sessions first.",
+      "items": {
+        "type": "object",
+        "required": ["id", "goal", "agent", "status", "started_at", "finished_at",
+                     "duration_ms", "steps", "events", "gate_failures", "warnings", "fabricated_verify"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "goal": {"type": "string"},
+          "agent": {"type": "string"},
+          "status": {"type": "string"},
+          "started_at": {"type": ["string", "null"]},
+          "finished_at": {"type": ["string", "null"]},
+          "duration_ms": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "description": "Wall-clock time of the session. Sessions not yet closed are counted up to generated_at."
+          },
+          "steps": {"type": "integer", "minimum": 0},
+          "events": {"type": "integer", "minimum": 0},
+          "gate_failures": {"type": "integer", "minimum": 0},
+          "warnings": {"type": "integer", "minimum": 0},
+          "fabricated_verify": {"type": "boolean"}
+        }
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "description": "One entry per task in PLAN.md, including tasks that were dropped.",
+      "items": {
+        "type": "object",
+        "required": ["task_id", "state", "text", "scope", "verify_status",
+                     "verify_duration_ms", "verified_at", "waived_reason", "evidence_files"],
+        "additionalProperties": false,
+        "properties": {
+          "task_id": {"type": "string", "minLength": 1},
+          "state": {"enum": ["open", "done", "dropped"]},
+          "text": {"type": "string"},
+          "scope": {"type": "array", "items": {"type": "string"}},
+          "verify_status": {"type": ["string", "null"], "enum": ["pass", "fail", "waived", null]},
+          "verify_duration_ms": {"type": ["integer", "null"], "minimum": 0},
+          "verified_at": {"type": ["string", "null"]},
+          "waived_reason": {"type": ["string", "null"]},
+          "evidence_files": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Files whose content fingerprint was recorded at the last verify."
+          }
+        }
+      }
+    },
+    "ledger": {
+      "type": "object",
+      "required": ["files", "events", "seals", "head", "ok", "problems"],
+      "additionalProperties": false,
+      "properties": {
+        "files": {"type": "integer", "minimum": 0},
+        "events": {"type": "integer", "minimum": 0},
+        "seals": {"type": "integer", "minimum": 0},
+        "head": {"type": ["string", "null"]},
+        "ok": {"type": "boolean"},
+        "problems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["file", "line", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "file": {"type": "string"},
+              "line": {"type": "integer", "minimum": 0},
+              "reason": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": ["sessions", "duration_ms", "events", "tasks", "tasks_done", "tasks_open",
+                   "tasks_dropped", "verified", "verify_failed", "waived", "unproven_done"],
+      "additionalProperties": false,
+      "properties": {
+        "sessions": {"type": "integer", "minimum": 0},
+        "duration_ms": {"type": "integer", "minimum": 0},
+        "events": {"type": "integer", "minimum": 0},
+        "tasks": {"type": "integer", "minimum": 0},
+        "tasks_done": {"type": "integer", "minimum": 0},
+        "tasks_open": {"type": "integer", "minimum": 0},
+        "tasks_dropped": {"type": "integer", "minimum": 0},
+        "verified": {"type": "integer", "minimum": 0},
+        "verify_failed": {"type": "integer", "minimum": 0},
+        "waived": {"type": "integer", "minimum": 0},
+        "unproven_done": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Tasks marked [x] without valid verify evidence — the task-verify gate rejects them."
+        }
+      }
+    }
+  }
+}

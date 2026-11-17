@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:intelligence:v1:dependency-graph",
+  "title": "Pakem Dependency Graph v1",
+  "type": "object",
+  "required": ["schema_version", "root", "node_count", "edge_count", "nodes", "edges", "unresolved_relative_imports", "limitations"],
+  "properties": {
+    "schema_version": {"const": "pakem.dependency-graph/v1"},
+    "root": {"type": "string"},
+    "node_count": {"type": "integer", "minimum": 0},
+    "edge_count": {"type": "integer", "minimum": 0},
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "language", "is_test", "size_bytes", "imports"],
+        "properties": {
+          "path": {"type": "string"},
+          "language": {"type": "string"},
+          "is_test": {"type": "boolean"},
+          "size_bytes": {"type": "integer", "minimum": 0},
+          "imports": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to"],
+        "properties": {"from": {"type": "string"}, "to": {"type": "string"}},
+        "additionalProperties": false
+      }
+    },
+    "unresolved_relative_imports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "specifier"],
+        "properties": {"from": {"type": "string"}, "specifier": {"type": "string"}},
+        "additionalProperties": false
+      }
+    },
+    "unresolved_imports": {
+      "description": "All local imports that failed to resolve, with the reason. `unresolved_relative_imports` remains as the legacy subset.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "specifier", "reason"],
+        "properties": {
+          "from": {"type": "string"},
+          "specifier": {"type": "string"},
+          "reason": {"enum": ["relative", "alias", "baseUrl"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "aliases": {
+      "description": "Path alias rules read from tsconfig/jsconfig (following extends).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["prefix", "targets", "source"],
+        "properties": {
+          "prefix": {"type": "string"},
+          "targets": {"type": "array", "items": {"type": "string"}},
+          "source": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "circular_dependencies": {
+      "description": "Strongly connected components that contain a cycle; each component is a list of paths (at most 20 components).",
+      "type": "array",
+      "items": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+    },
+    "circular_dependency_count": {"type": "integer", "minimum": 0},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:protocol:v1:event",
+  "title": "Pakem Protocol v1 Event",
+  "description": "A portable, append-only workflow event emitted by a Pakem-compatible agent or runtime.",
+  "type": "object",
+  "required": [
+    "protocol",
+    "protocol_version",
+    "event_id",
+    "event",
+    "occurred_at",
+    "session_id",
+    "actor",
+    "payload"
+  ],
+  "properties": {
+    "protocol": {
+      "const": "pakem"
+    },
+    "protocol_version": {
+      "const": "1.0"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event": {
+      "type": "string",
+      "enum": [
+        "bug.recorded",
+        "decision.recorded",
+        "handover.created",
+        "integrity.repinned",
+        "policy.approval.granted",
+        "policy.decision",
+        "runtime.checkpoint.created",
+        "runtime.hook.dispatched",
+        "runtime.recovered",
+        "runtime.state.transitioned",
+        "runtime.workflow.initialized",
+        "session.abandoned",
+        "session.finish_blocked",
+        "session.finished",
+        "session.resumed",
+        "session.started",
+        "session.step_recorded",
+        "spec.approved",
+        "task.added",
+        "task.completed",
+        "task.dropped",
+        "verification.completed",
+        "team.agent.registered",
+        "team.task.created",
+        "team.task.assigned",
+        "team.task.claimed",
+        "team.task.heartbeat",
+        "team.task.released",
+        "team.task.handed_off",
+        "team.task.submitted",
+        "team.task.reviewed",
+        "team.task.blocked",
+        "team.task.unblocked",
+        "ledger.sealed"
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "session_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "actor": {
+      "type": "object",
+      "required": [
+        "type",
+        "name"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "agent",
+            "user",
+            "system"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "integrity": {
+      "description": "Additive hash chain (1.2.0). Older events without this field remain valid; a new chain starts after the last event that has no integrity data.",
+      "type": "object",
+      "required": ["prev", "hash"],
+      "properties": {
+        "prev": {"type": ["string", "null"]},
+        "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

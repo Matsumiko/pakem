@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pakem:runtime:v1:workflow",
+  "title": "Pakem Runtime Workflow State v1",
+  "type": "object",
+  "required": ["schemaVersion", "workflowId", "state", "revision", "createdAt", "updatedAt", "checkpointIds", "lastTransition"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "workflowId": {"type": "string", "minLength": 1},
+    "state": {"enum": ["initialized", "planning", "ready", "executing", "verifying", "blocked", "recovering", "completed", "failed"]},
+    "goal": {"type": "string"},
+    "revision": {"type": "integer", "minimum": 1},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"},
+    "activeSessionId": {"type": ["string", "null"]},
+    "currentTaskId": {"type": ["string", "null"]},
+    "checkpointIds": {"type": "array", "items": {"type": "string"}},
+    "lastTransition": {"type": "object", "required": ["from", "to", "reason", "at"], "properties": {"from": {"type": ["string", "null"]}, "to": {"type": "string"}, "reason": {"type": "string"}, "at": {"type": "string", "format": "date-time"}}, "additionalProperties": true}
+  },
+  "additionalProperties": true
+}
